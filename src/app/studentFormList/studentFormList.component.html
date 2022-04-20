@@ -1,0 +1,110 @@
+<div fxLayout="row" fxLayoutAlign="center center">
+    <div fxLayout="row">
+        <h1>Student List</h1>
+
+    </div>
+
+</div>
+<div fxLayout="row" fxLayoutAlign="center center">
+    <!-- <mat-form-field fxFlex=90>
+        <input matInput #filter placeholder="Search..." autocomplete="off" style="width: 100%">
+        <mat-icon matSuffix>search</mat-icon>
+    </mat-form-field> -->
+    <mat-form-field fxFlex=90 appearance="standard">
+        <mat-label>Search</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="" #input>
+
+    </mat-form-field>
+</div>
+<div fxLayout="row" fxLayoutAlign="center center">
+    <div fxLayout="column" fxFlex=90>
+
+        <mat-table [dataSource]="dataSource">
+
+            <!-- id Column -->
+            <ng-container matColumnDef="sno">
+                <mat-header-cell *matHeaderCellDef> No. </mat-header-cell>
+                <mat-cell *matCellDef="let element;let i=index"> {{ (i+1) + (myPaginator.pageIndex * myPaginator.pageSize) }} </mat-cell>
+            </ng-container>
+
+            <!-- code Column -->
+            <ng-container matColumnDef="studentCnic">
+                <mat-header-cell *matHeaderCellDef> Student CNIC </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.cnicId}} </mat-cell>
+            </ng-container>
+
+            <!-- abbreviation Column -->
+            <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.name}}
+
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="fatherName">
+                <mat-header-cell *matHeaderCellDef> Guardian Name </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.guardianName}}
+
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="guardianCnic">
+                <mat-header-cell *matHeaderCellDef> Guardian CNIC </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.guardianCnic}}
+
+                </mat-cell>
+            </ng-container>
+            <!-- {{displayDegree(element.degree)}} -->
+            <ng-container matColumnDef="studentRecord">
+                <mat-header-cell *matHeaderCellDef> Qualification </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="options">
+                <mat-header-cell *matHeaderCellDef> </mat-header-cell>
+                <mat-cell *matCellDef="let element" class="hoverClass" fxLayoutGap="10px">
+
+                    <a>
+                        <button (click)="OnEdit(element.id)" mat-icon-button color="primary" aria-label="Example icon button with a heart icon">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                    </a>
+                    <a>
+                        <button (click)="OnView(element.id)" mat-icon-button color="primary" aria-label="Example icon button with a heart icon">
+                  <mat-icon>visibility</mat-icon>
+                </button>
+                    </a>
+                    <a>
+                        <button (click)="OnDelete(element.id)" mat-icon-button color="warn" aria-label="Example icon button with a heart icon">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                    </a>
+                </mat-cell>
+
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="columnToDisplay"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: columnToDisplay;" class="example-element-row">
+            </mat-row>
+
+        </mat-table>
+        <mat-paginator #myPaginator (page)="pageChangeEvent($event)" [length]="totalSize" [pageSizeOptions]="[5, 10, 25, 100]" showFirstLastButtons>
+        </mat-paginator>
+
+        <!-- <mat-paginator (page)="pageEvent($event)" [length]="dataLength" #paginator [pageSize]="pageSize"
+        [pageSizeOptions]="pageSizeOptions" [showFirstLastButtons]="true">
+        </mat-paginator> -->
+
+
+    </div>
+</div>
+
+
+<!-- <mat-paginator fxLayout="row" fxLayoutAlign="center" #paginator [pageSizeOptions]="[2, 4, 6]" showFirstLastButtons></mat-paginator> -->
+<!-- <div fxLayout="row" fxLayoutAlign="end">
+    <div fxLayout="row" fxFlex="27">
+        <mat-paginator [length]="100" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page">
+        </mat-paginator>
+    </div>
+</div> -->
+<button mat-fab color="primary" (click)="OnLoadList()" class="button">
+<mat-icon>add</mat-icon>
+</button>

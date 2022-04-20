@@ -1,0 +1,543 @@
+<div style="background-color: rgb(230, 230, 230);" fxLayout="row" fxLayoutAlign="center center">
+    <mat-card fxFlex="90" *ngIf="x && x.length">
+        <form [formGroup]="studentForm">
+
+            <div fxLayout="column" fxLayoutGap="5px">
+                <div fxLayout="column" fxLayoutGap="-15px">
+                    <h5>Campus</h5>
+                    <mat-form-field>
+                        <mat-select formControlName="campusId">
+                            <mat-option *ngFor="let campus of x" [value]="campus.id">
+                                {{campus?.campusName}} ({{campus?.campusId}})
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <div fxLayout="column" fxLayoutGap="20px" *ngIf="this.studentForm.get('campusId').value">
+                    <div *ngFor="let program of x[0]?.campusProgram" fxLayout="column">
+
+                        <h4 fxFlex="100">{{program.program?.name}}</h4>
+
+
+                        <div class="example-button-row" fxLayout="row" fxLayoutGap="8px" fxFlex="95" fxLayoutAlign="start" *ngIf="interface.create ==true">
+
+
+                            <div fxLayout="row" fxFlex="20" *ngFor="let detail of program.program.programDetail;let i=index">
+                                <button [class]="(selected !=null && selected.programName==program.program?.name &&
+                            selected.index == i)?'selected':''" mat-raised-button (click)="programDetail(i,detail,program.program?.name)" class="button2" type="button" fxFlex="100">{{detail.abbreviation}} <br> {{detail.name}}</button>
+                            </div>
+                        </div>
+
+                        <div class="example-button-row" fxLayout="row" fxLayoutGap="8px" fxFlex="95" fxLayoutAlign="start" *ngIf="interface.view ==true">
+                            <div fxLayout="row" fxFlex="20" *ngFor="let detail of program.program.programDetail;let i=index">
+                                <button [disabled]="(studentInfo  && detail.id!=this.studentInfo.programDetailId )" [class]="(studentInfo  && detail.id==this.studentInfo.programDetailId )?'selected':''" mat-raised-button (click)="programDetail(i,detail,program.program?.name)" class="button2"
+                                    type="button" fxFlex="100">
+                                  {{detail.name}}</button>
+                            </div>
+                        </div>
+                        <div class="example-button-row" fxLayout="row" fxLayoutGap="8px" fxFlex="95" fxLayoutAlign="start" *ngIf="interface.edit ==true">
+                            <div fxLayout="row" fxFlex="20" *ngFor="let detail of program.program.programDetail;let i=index">
+                                <button [class]="(studentInfo  && detail.id==this.studentInfo.programDetailId )?'selected':''" mat-raised-button (click)="programDetail(i,detail,program.program?.name)" class="button2" type="button" fxFlex="100">
+                                {{detail.name}}</button>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div fxLayout="column" fxLayoutGap="8px" fxLayoutAlign="">
+
+                        <div class="wrapper" fxLayout="row" fxLayoutAlign=" center">
+                            <div fxLayout="row" style="height: 120px; width: 120px;">
+
+
+
+                                <div *ngIf="interface.create==true || interface.edit==true " fxLayout="row" (click)="fileInput.click()" [matTooltip]=" localImageUrl ? 'Update image': 'Upload image'" class="imageDisplay" [style.background-image]="localImageUrl">
+
+                                    <div class="image-input" [ngStyle]="{'display': localImageUrl ? 'none' : 'inline'}">
+                                        <mat-icon class="picIcon">
+                                            {{localImageUrl ? "edit_outline" : "add"}}
+                                        </mat-icon>
+                                        <input #fileInput type="file" ng2FileSelect maxFiles="1" [uploader]="uploader" accept='.jpg,.jpeg,.png' formControlName="uploadImage" />
+                                    </div>
+
+                                </div>
+                                <img *ngIf="interface.view==true" [src]="localImageUrl" style="filter: brightness(0.7);" />
+                            </div>
+
+                        </div>
+
+                        <div fxLayout="column">
+                            <div fxLayout="row">
+
+                                <mat-label> Upload Picture</mat-label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div fxLayout="column" fxLayoutGap="5px">
+                    <mat-card-subtitle>Intake Session:</mat-card-subtitle>
+                    <div fxFlex="100" fxLayoutGap="15px">
+                        <mat-form-field fxFlex="30">
+                            <mat-select formControlName="session">
+                                <mat-option *ngFor="let i of academicSession" [value]="i.session">
+                                    {{i.title}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field fxFlex="20">
+                            <mat-select formControlName="month">
+                                <mat-option *ngFor="let mon of months" [value]="mon">
+                                    {{mon}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="20">
+                            <mat-select formControlName="year">
+                                <mat-option *ngFor="let yrs of years" [value]="yrs">
+                                    {{yrs}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+
+                        <mat-form-field fxFlex="30">
+                            <mat-label>Admission Date</mat-label>
+                            <input matInput [matDatepicker]="picker1" formControlName="admissionDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1>
+                            </mat-datepicker>
+                            <!-- <input matInput [matDatepickerFilter]="myFilter" [matDatepicker]="picker" formControlName="admissionDate">
+                            <mat-hint>MM/DD/YYYY</mat-hint>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker> -->
+
+                        </mat-form-field>
+                    </div>
+                </div>
+                <fieldset class="field-set" style="color: rgb(14, 1, 1); ">
+
+                    <legend>
+                        <h4>Student Personal Details </h4>
+                    </legend>
+
+
+                    <div class="firstHalf" fxLayout="column">
+
+
+
+
+                        <div class="item1" fxLayout="column" fxLayoutAlign=" center" fxLayoutGap="20px" fxLayout="row">
+                            <div fxLayout="row" fxFlex="25">
+                                <mat-form-field class="formfield" fxFlex="100">
+                                    <mat-label>Name *</mat-label>
+                                    <input matInput placeholder="" class="textfield" formControlName="name">
+
+                                    <mat-error *ngIf="studentForm.get('name')!.hasError('required')">
+                                        Name is <strong>mandatory</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" fxFlex="25">
+                                <mat-form-field class="formfield" fxFlex="100">
+                                    <mat-label>Date of Birth* </mat-label>
+                                    <input formControlName="dob" matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                    <mat-error *ngIf="studentForm.get('dob')!.invalid">
+                                        Please enter your age
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="column" fxLayoutGap="3px" fxFlex="20">
+                                <mat-label>Gender:</mat-label>
+                                <div fxLayout="row" fxFlex="25">
+                                    <mat-radio-group aria-label="Select an option" fxLayoutGap="10px" formControlName="gender">
+                                        <mat-radio-button checked="true" value="male">Male </mat-radio-button>
+                                        <mat-radio-button value="female">Female </mat-radio-button>
+                                    </mat-radio-group>
+                                </div>
+                            </div>
+
+                            <div fxFlex="25">
+                                <mat-form-field class="formfield" fxFlex="100">
+                                    <mat-label>Mark of Identification *</mat-label>
+                                    <input matInput placeholder="" class="textfield" formControlName="markOfIdentification">
+
+
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+
+                        <div class="item1" fxLayoutAlign=" center" fxLayoutGap="20px" fxLayout="row">
+                            <div fxLayout="row" fxFlex="25" fxLayoutGap="10px">
+                                <div fxLayout="row" fxFlex="35">
+                                    <mat-form-field fxFlex="100">
+                                        <mat-label>Country *</mat-label>
+                                        <mat-select formControlName="countryCode">
+                                            <mat-option *ngFor="let i of data" [value]="+(i.id)">
+                                                {{i.abbreviation}} ({{i.code}})
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div fxLayout="row" fxFlex="65">
+                                    <mat-form-field class="formfield" fxFlex="100">
+                                        <mat-label>Mobile No.* </mat-label>
+                                        <input type="tel" placeholder="" matInput [textMask]="{mask:phoneMask}" class="textfield" formControlName="mobileNumber">
+
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div fxLayout="row" fxFlex="25">
+                                <mat-form-field class="formfield" fxFlex="100">
+                                    <mat-label>Email </mat-label>
+                                    <input type="email" matInput class="textfield" formControlName="email">
+
+                                    <mat-error *ngIf="studentForm.get('email')!.hasError('required')">
+                                        Email is <strong>required</strong>
+                                    </mat-error>
+                                    <mat-error *ngIf="studentForm.get('email')!.hasError('email')">
+                                        Please enter a valid email address
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="3px" fxFlex="20">
+
+                                <mat-radio-group (change)="changeType($event.value)" formControlName="cnicType" aria-label="Select an option" fxLayoutGap="10px">
+                                    <mat-radio-button checked="true" value="CNIC">CNIC/B-Form/CRC </mat-radio-button>
+                                    <mat-radio-button value="Passport">Passport </mat-radio-button>
+                                </mat-radio-group>
+                            </div>
+
+                            <div fxLayout="row" fxFlex="25">
+
+                                <mat-form-field *ngIf="!isCnic" class="formfield" fxFlex="100">
+                                    <mat-label>Passport *</mat-label>
+                                    <input matInput placeholder="" class="textfield" matInput [textMask]="{mask:passportMask}" formControlName="passport">
+
+                                </mat-form-field>
+
+
+                                <mat-form-field *ngIf="isCnic" class="formfield" fxFlex="100">
+                                    <mat-label>CNIC/B-Form/BirthCert *</mat-label>
+                                    <input matInput placeholder="" class="textfield" matInput [textMask]="{mask:CNICMask}" formControlName="cnicId">
+
+                                </mat-form-field>
+
+                            </div>
+                        </div>
+                        <div class="item1" fxLayoutAlign=" center" fxLayoutGap="20px" fxLayout="row">
+                            <div fxLayout="row" fxFlex="25">
+                                <mat-form-field class="formfield" fxFlex="100">
+                                    <mat-label>Religion *</mat-label>
+                                    <input matInput placeholder="" class="textfield" formControlName="religion">
+                                </mat-form-field>
+                            </div>
+                            <div fxLayout="row" fxFlex="25">
+                                <mat-form-field class="formfield" fxFlex="100">
+                                    <mat-label>Nationality *</mat-label>
+                                    <input matInput placeholder="" class="textfield" formControlName="nationality">
+
+                                </mat-form-field>
+                            </div>
+
+                            <mat-label fxFlex="20">Emergency Contact</mat-label>
+
+
+
+                            <div fxFlex="25" fxLayoutGap="10px">
+                                <div fxLayout="row" fxFlex="35">
+                                    <mat-form-field fxFlex="100">
+                                        <mat-label>Country </mat-label>
+                                        <mat-select formControlName="emergencyContactCode">
+                                            <mat-option *ngFor="let i of data" [value]="+(i.id)">
+                                                {{i.abbreviation}} ( {{i.code}})
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                                <div fxLayout="row" fxFlex="65">
+                                    <mat-form-field class="formfield" fxFlex="100">
+                                        <mat-label>Mobile No. *</mat-label>
+                                        <input type="tel" placeholder="" matInput [textMask]="{mask:phoneMask}" class="textfield" formControlName="emergencyContactNumber">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="item1" fxLayoutAlign=" center" fxLayoutGap="1px" fxLayout="row">
+                            <div fxLayoutGap="100px" fxLayoutAlign="start center" fxFlex="35">
+
+                                <mat-label>Postal Address*</mat-label>
+                                <mat-form-field fxFlex="50">
+                                    <mat-label>City </mat-label>
+                                    <mat-select formControlName="postalCity">
+                                        <mat-option *ngFor="let i of city" [value]="+(i.id)">
+                                            {{i.value}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div fxFlex="75">
+                                <mat-form-field class="formfield" fxFlex="">
+                                    <mat-label>Address * </mat-label>
+                                    <input matInput placeholder="" class="textfield" formControlName="postalAddress">
+
+                                </mat-form-field>
+                            </div>
+                        </div>
+
+                        <div class="item1" fxLayoutAlign=" center" fxLayoutGap="1px" fxLayout="row">
+                            <div fxLayoutGap="70px" fxLayoutAlign="start center" fxFlex="35">
+
+                                <mat-label>Permanent Address</mat-label>
+                                <mat-form-field fxFlex="50">
+                                    <mat-label>City </mat-label>
+                                    <mat-select formControlName="permanentCity">
+                                        <mat-option *ngFor="let i of city" [value]="+(i.id)">
+                                            {{i.value}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div fxFlex="75">
+                                <mat-form-field class="formfield" fxFlex="">
+                                    <mat-label>Address </mat-label>
+                                    <input matInput placeholder="" class="textfield" formControlName="permanentAddress">
+
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div class="item1" fxLayoutAlign=" center" fxLayoutGap="20px" fxLayout="row">
+                            <mat-form-field class="formfield" fxFlex="25">
+                                <mat-label>City </mat-label>
+                                <mat-select formControlName="domicileCity">
+                                    <mat-option *ngFor="let i of city" [value]="+(i.id)">
+                                        {{i.value}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field class="formfield" fxFlex="25">
+                                <mat-label>Province </mat-label>
+                                <mat-select formControlName="domicileProvince">
+                                    <mat-option *ngFor="let i of province" [value]="+(i.id)">
+                                        {{i.value}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field class="formfield" fxFlex="20">
+                                <mat-label>Tehsil </mat-label>
+                                <input matInput placeholder="" class="textfield" formControlName="domicileTehsil">
+
+
+                            </mat-form-field>
+
+                            <mat-form-field class="formfield" fxFlex="25">
+                                <mat-label>Admission Type </mat-label>
+                                <mat-select formControlName="admissionType">
+                                    <mat-option *ngFor="let i of admissionType" [value]="+(i.id)">
+                                        {{i.value}}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                        </div>
+
+
+
+                    </div>
+
+                </fieldset>
+                <fieldset class="field-set" style="color: rgb(0, 0, 0); ">
+
+                    <legend>
+                        <h4>Father / Guardian Details </h4>
+                    </legend>
+                    <div class="firstHalf" fxLayout="column">
+                        <div fxLayout="row" fxLayoutGap="40px">
+                            <div fxLayout="row" fxLayoutGap="3px" fxFlex="20" fxLayoutAlign="start center">
+
+                                <mat-radio-group aria-label="Select an option" fxLayoutGap="10px" formControlName="guardianType">
+                                    <mat-radio-button checked="true" value="father">Father </mat-radio-button>
+                                    <mat-radio-button value="guardian">Guardian </mat-radio-button>
+                                </mat-radio-group>
+
+
+                            </div>
+                            <mat-form-field class="formfield" fxFlex="20">
+                                <mat-label>Name *</mat-label>
+                                <input matInput placeholder="" class="textfield" formControlName="guardianName">
+
+
+                            </mat-form-field>
+
+                            <mat-form-field class="formfield" fxFlex="20">
+                                <mat-label>CNIC *</mat-label>
+                                <input type="text" placeholder="" matInput [textMask]="{mask:CNICMask}" class="textfield" formControlName="guardianCnic">
+
+
+                            </mat-form-field>
+                            <div fxFlex="45" fxLayoutGap="10px">
+
+                                <mat-form-field fxFlex="25">
+                                    <mat-label>Country *</mat-label>
+                                    <mat-select formControlName="guardianCountry">
+                                        <mat-option *ngFor="let i of data" [value]="+(i.id)">
+                                            {{i.abbreviation}} ({{i.code}})
+
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field class="formfield" fxFlex="50">
+                                    <mat-label>Mobile Number *</mat-label>
+                                    <input type="tel" placeholder="" matInput [textMask]="{mask:phoneMask}" class="textfield" formControlName="guardianMobileNumber">
+                                </mat-form-field>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset class="field-set" style="color: rgb(0, 0, 0); ">
+
+                    <legend>
+                        <h4>Student Academic Record </h4>
+                    </legend>
+
+                    <div fxLayout="column">
+                        <div class="forthHalf" fxLayout="row" fxLayoutGap="20px">
+
+                            <div class="item1" fxLayoutAlign="" fxFlex="20">
+                                <h4> Qualification </h4>
+
+                            </div>
+                            <div class="item1" fxLayoutAlign="center" fxFlex="15">
+                                <h4> Roll No </h4>
+
+                            </div>
+                            <div class="item1" fxLayoutAlign="center" fxFlex="15">
+                                <h4> Obtained Marks </h4>
+
+                            </div>
+                            <div class="item1" fxLayoutAlign="center" fxFlex="15">
+                                <h4> Percentage</h4>
+
+                            </div>
+
+                            <div class="item1" fxLayoutAlign="center" fxFlex="15">
+                                <h4> Board </h4>
+                            </div>
+
+                        </div>
+                        <div formArrayName="studentAcademicRecord">
+
+                            <div *ngFor="let studentRecord of this.studentForm.get('studentAcademicRecord')['controls']; let i=index">
+                                <div [formGroup]="studentRecord">
+                                    <div class="Fifth" fxLayout="row" fxLayoutGap="25px">
+
+                                        <div class="item1" fxFlex="20">
+                                            <h4 *ngIf="i == 0"> SSC (Matriculation) </h4>
+                                            <h4 *ngIf="i == 1"> HSC (Intermediate) </h4>
+                                            <h4 *ngIf="i == 2"> BS (Graduation) </h4>
+                                            <h4 *ngIf="i == 3"> Any Other Exam </h4>
+
+                                        </div>
+
+                                        <div class="item1" fxLayoutAlign="start" fxFlex="15">
+                                            <div fxLayoutAlign="start" style="display: none;">
+                                                <mat-form-field style="display: none;">
+                                                    <input matInput type="number" placeholder="" formControlName="id">
+                                                </mat-form-field>
+                                            </div>
+                                            <mat-form-field fxFlex="100">
+                                                <input matInput type="number" placeholder="" class="textfield" formControlName="rollNo" name="roll" required>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="item1" fxLayoutAlign=" center" fxFlex="15">
+                                            <mat-form-field fxFlex="100">
+                                                <input matInput type="number" placeholder="" class="textfield" formControlName="obtainedMarks" name="marks" required>
+                                            </mat-form-field>
+                                        </div>
+                                        <div class="item1" fxLayoutAlign=" center" fxFlex="15">
+                                            <mat-form-field fxFlex="100">
+                                                <input matInput type="number" placeholder="" class="textfield" formControlName="percentage" name="percentage" required>
+                                            </mat-form-field>
+                                        </div>
+
+                                        <div class="item1" fxLayoutAlign=" center" fxFlex="15">
+                                            <mat-form-field fxFlex="100">
+                                                <input matInput type="text" placeholder="" class="textfield" formControlName="board" name="board" required>
+                                            </mat-form-field>
+
+                                        </div>
+                                        <div fxLayoutAlign="center" *ngIf="interface.view==true">
+                                            <button *ngIf="isShown" mat-icon-button color="primary" type="button" (click)="OnAddRecord()">
+                                    <mat-icon>add_circle</mat-icon>
+                                  </button>
+
+                                            <button mat-icon-button color="warn" *ngIf="(i==1 ||i==2 ||i==3 ) && isShown" type="button" (click)="OnRemoveRecord()">
+                                    <mat-icon>remove_circle</mat-icon>
+                                  </button>
+                                        </div>
+                                        <div fxLayoutAlign="center" *ngIf="interface.edit==true">
+                                            <button mat-icon-button color="primary" type="button" (click)="OnAddRecord()">
+                                <mat-icon>add_circle</mat-icon>
+                              </button>
+
+                                            <button mat-icon-button color="warn" *ngIf="i==1 ||i==2 ||i==3" type="button" (click)="OnRemoveRecord()">
+                                <mat-icon>remove_circle</mat-icon>
+                              </button>
+                                        </div>
+                                        <div fxLayoutAlign="center" *ngIf="interface.create==true">
+                                            <button mat-icon-button color="primary" type="button" (click)="OnAddRecord()">
+                                  <mat-icon>add_circle</mat-icon>
+                                </button>
+
+                                            <button mat-icon-button color="warn" *ngIf="i==1 ||i==2 ||i==3" type="button" (click)="OnRemoveRecord()">
+                                  <mat-icon>remove_circle</mat-icon>
+                                </button>
+                                        </div>
+
+
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </fieldset>
+
+
+
+
+
+
+
+
+                <div fxLayout="row" fxLayoutAlign="end end">
+                    <div fxFlex="10%" fxLayoutAlign="end" *ngIf="interface.view==true">
+                        <button *ngIf="isShown" mat-raised-button color="primary" [disabled]="studentForm.invalid" (click)="OnSubmit()"> Submit</button>
+                    </div>
+                    <div fxFlex="10%" fxLayoutAlign="end" *ngIf="interface.create==true || interface.edit==true ">
+                        <button mat-raised-button color="primary" [disabled]="studentForm.invalid" (click)="OnSubmit()"> {{actionBtn}}</button>
+                    </div>
+
+
+
+                </div>
+            </div>
+
+        </form>
+    </mat-card>
+</div>

@@ -1,0 +1,21 @@
+mat-table {
+    width: 100%;
+}
+
+mat-row:hover .hoverClass {
+    visibility: visible;
+}
+
+mat-row .hoverClass {
+    visibility: hidden;
+}
+
+mat-row:hover {
+    background-color: rgb(211, 211, 211);
+}
+
+.button {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}

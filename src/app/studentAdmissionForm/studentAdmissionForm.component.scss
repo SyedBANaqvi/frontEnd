@@ -1,0 +1,62 @@
+.imgUpload {
+    border-radius: 15%;
+    padding: 4px 0;
+    width: 80px;
+    height: 80px;
+    margin: 0;
+}
+
+.image-input {
+    color: white;
+    input {
+        display: none;
+    }
+    .picIcon {
+        font-size: 30px;
+    }
+}
+
+.imageDisplay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 10%;
+    background-color: #2196f3;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    &:hover .image-input {
+        display: inline !important;
+    }
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.38);
+        background-blend-mode: darken;
+    }
+}
+
+.button2 {
+    width: 110px;
+    height: 110px;
+    border-radius: 10px
+}
+
+.mat-button-toggle {
+    background: #fff;
+    color: black;
+}
+
+.selected,
+.mat-button-toggle-checked {
+    background: rgb(84, 108, 241);
+    color: white;
+}
+
+.field-set {
+    padding-top: 10px;
+    margin-bottom: 15px;
+    margin-top: 10px;
+    border-radius: 7px;
+    border: 1px solid #e0e0e0;
+}
